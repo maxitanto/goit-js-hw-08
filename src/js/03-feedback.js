@@ -1,12 +1,14 @@
 import throttle from 'lodash.throttle';
 
 const formEl = document.querySelector('.feedback-form');
+const inputEmail = document.querySelector('[name="email"]');
+const textarea = document.querySelector('[name="message"]');
 
 formEl.addEventListener('input', throttle(onLogin, 500));
 formEl.addEventListener('submit', onSbmitForm);
 
 const KEY_FEEDBACK_FORM = 'feedback-form-state';
-const userData = {};
+let userData = JSON.parse(localStorage.getItem(KEY_FEEDBACK_FORM)) || {};
 
 addContentInFields();
 
@@ -17,26 +19,17 @@ function onLogin(evt) {
 
 function onSbmitForm(evt) {
   evt.preventDefault();
-  const localData = JSON.parse(localStorage.getItem(KEY_FEEDBACK_FORM));
 
-  if (localData === null) {
-    return;
-  }
+  console.log(userData);
 
-  console.log(JSON.parse(localStorage.getItem(KEY_FEEDBACK_FORM)));
+  localStorage.removeItem(KEY_FEEDBACK_FORM);
 
   formEl.reset();
 
-  localStorage.removeItem(KEY_FEEDBACK_FORM);
+  userData = {};
 }
 
 function addContentInFields() {
-  const localData = JSON.parse(localStorage.getItem(KEY_FEEDBACK_FORM));
-
-  if (localData === null) {
-    return;
-  }
-
-  formEl.email.value = localData.email;
-  formEl.message.value = localData.message;
+  textarea.value = userData.message || ' ';
+  inputEmail.value = userData.email || ' ';
 }
